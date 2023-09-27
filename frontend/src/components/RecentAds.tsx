@@ -17,9 +17,15 @@ export function RecentAds(): React.ReactNode {
     setAds(result.data);
   }
 
+  //requête au serveur back pour récupérer les Ads
   useEffect(() => {
     // mounting
-    fetchAds();
+    axios.get("http://localhost:5001/ads").then((result) => {
+      setAds(result.data)
+    }).catch((err) => {
+      console.error(err);
+    })
+    
   }, []);
 
   return (

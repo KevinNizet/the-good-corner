@@ -15,10 +15,9 @@ export function Layout(props: LayoutProps): React.ReactNode {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <body>
+      {/* on ne met pas de body ici car Next le génére automatiquement */}
         <Header />
         {props.children}
-      </body>
     </>
   );
 }

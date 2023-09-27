@@ -1,30 +1,34 @@
 import { Layout } from "@/components/Layout";
 /* import { ads } from "@/components/RecentAds"; */
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { AdCardProps } from "@/components/AdCard";
+import axios from "axios";
 
 export default function Ad() {
   const router = useRouter();
-
   const adId = router.query.id as string;
-  let foundAd = null;
-  /* for (const ad of ads) {
-    if (ad.link.endsWith(adId)) {
-      foundAd = ad;
-      break;
-    }
-  } */
-  // const foundAd = ads.find(ad => ad.link.endsWith(adId));
+  const [adDetails, setAdDetails] = useState({} as AdCardProps);
+
+  useEffect(() => {
+    axios.get(`http://localhost:5001/ads/${adId}`).then((result) => {
+      setAdDetails(result.data);
+    }).catch((err) => {
+      console.error(err);
+    })
+  }, [adId]);
 
   return (
     <Layout title="Ad">
       <main className="main-content">
-        <p>Offre ID: {router.query.id}</p>
-        {/*         {foundAd && (
+        <p>Offre ID: {adId}</p>
+        {adDetails && (
           <>
-            <h2>{foundAd.title}</h2>
-            <p>{foundAd.price} €</p>
+            <h2>{adDetails.title}</h2>
+            <p>Prix : {adDetails.price} €</p>
+            <p>Image : <img src={adDetails.imgUrl} alt={adDetails.title} /></p>
           </>
-        )} */}
+        )}
       </main>
     </Layout>
   );

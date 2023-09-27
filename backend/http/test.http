@@ -1,5 +1,5 @@
 ### Tags - createOne
-POST http://localhost:5000/tags
+POST http://localhost:5001/tags
 content-type: application/json
 
 {
@@ -7,58 +7,60 @@ content-type: application/json
 }
 
 ### Categories - createOne
-POST http://localhost:5000/categories
+POST http://localhost:5001/categories
 content-type: application/json
 
 {
-  "name": "Super category"
+  "name": "Animaux et cie"
 }
 
 ### Categories - patchOne
-PATCH  http://localhost:5000/categories/1
+PATCH  http://localhost:5001/categories/1
 content-type: application/json
 
 {
   "name": "Updated category"
 }
 
-### Categories - getOne
-GET http://localhost:5000/categories/1
+### Categories - getAll
+GET http://localhost:5001/categories
 
 ### Categories - getOne
-GET http://localhost:5000/categories/1/ads
+GET http://localhost:5001/categories/1
+
+### Categories - getOne
+GET http://localhost:5001/categories/1/ads
 
 ### Ads - getAll
-GET http://localhost:5000/ads
+GET http://localhost:5001/ads
 
 ### Ads - getAll (with filter)
-GET http://localhost:5000/ads?search=bike
+GET http://localhost:5001/ads?search=bike
 
 ### Ads - getOne
-GET http://localhost:5000/ads/5
+GET http://localhost:5001/ads/5
 
 ### Ads - createOne
-POST http://localhost:5000/ads
+POST http://localhost:5001/ads
 content-type: application/json
 
 {
-  "title": "Petits gateaux",
+  "title": "Un chien très gentil",
   "description": null,
   "price": 100,
-  "imgUrl": "https://cdn.pixabay.com/photo/2023/08/26/14/19/cupcake-8215179_1280.jpg",
-  "category": null,
+  "imgUrl": "https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcQkrjYxSfSHeCEA7hkPy8e2JphDsfFHZVKqx-3t37E4XKr-AT7DML8IwtwY0TnZsUcQ",
+  "category": 2,
   "tags": []
 }
 
 ### Ads - deleteOne
 
-DELETE http://localhost:5000/ads/1
+DELETE http://localhost:5001/ads/1
 
 ### Ads - patchOne
-PATCH http://localhost:5000/ads/5
+PATCH http://localhost:5001/ads/2
 content-type: application/json
 
 {
-  "category": null,
-  "tags": null // could be [] as well
+  "category": "Animaux et cie"
 }
