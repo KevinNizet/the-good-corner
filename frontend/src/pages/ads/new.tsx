@@ -18,6 +18,14 @@ export default function NewAd() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [hasBeenSent, setHasBeenSent] =useState(false);
 
+  //State pour gérer les champs du formulaire
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [imgUrl, setImgUrl] = useState("");
+  const [price, setPrice] = useState(0);
+  const [categoryId, setCategoryId] = useState<null | number>(null);
+
+
   async function fetchCategories() {
     const result = await axios.get<CategoryType[]>(`${API_URL}/categories`);
     setCategories(result.data);
@@ -47,7 +55,11 @@ export default function NewAd() {
     .then(response => {
       console.log("données envoyées à la BDD", data);
       if ("id" in response.data) {
-        form.reset();
+        setTitle("");
+        setDescription("");
+        setPrice(0);
+        setImgUrl("");
+        setCategoryId(null);
         setHasBeenSent(true);
        setTimeout(() => {
         Router.push(`/`)
@@ -59,10 +71,6 @@ export default function NewAd() {
     });
 }
 
-
-//mettre des states sur chacun des champs pour les gérer
-//value = sate
-// setValue = onChange e.target.value
 
 return (
   <Layout title="Nouvelle offre">
@@ -76,23 +84,25 @@ return (
         <>
           <p>Poster une nouvelle offre</p>
           <form onSubmit={onSubmit}>
-            <input type="text" name="title" placeholder="Titre de l'annonce" />
+            <input type="text" name="title" placeholder="Titre de l'annonce" value={title} onChange={(e) => setTitle(e.target.value)} />
             <br />
             <br />
             <input
               type="text"
               name="description"
               placeholder="Description de l'annonce"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
             <br />
             <br />
-            <input type="number" name="price" placeholder="0,00€" />
+            <input type="number" name="price" placeholder="0,00€" value={price} onChange={(e) => setPrice(Number(e.target.value))}/>
             <br />
             <br />
-            <input type="text" name="imgUrl" placeholder="Lien de l'image" />
+            <input type="text" name="imgUrl" placeholder="Lien de l'image" value={imgUrl} onChange={(e) => setImgUrl(e.target.value)}/>
             <br />
             <br />
-            <select name="categoryId">
+            <select name="categoryId" value={categoryId + ""} onChange={(e) => setCategoryId(Number(e.target.value))}>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
