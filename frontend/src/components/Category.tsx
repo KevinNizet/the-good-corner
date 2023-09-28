@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export type CategoryProps = {
   name: string;
   id: number;
@@ -5,8 +7,8 @@ export type CategoryProps = {
 
 export function Category(props: CategoryProps): React.ReactNode {
   return (
-    <a href={`/categories/${props.id}`} className="category-navigation-link">
+    <Link href={`/categories/${props.id}`} className="category-navigation-link">
       {props.name}
-    </a>
+    </Link>
   );
 }

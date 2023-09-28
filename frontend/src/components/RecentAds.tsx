@@ -41,6 +41,7 @@ export function RecentAds(): React.ReactNode {
               price={item.price}
               imgUrl={item.imgUrl}
               link={`/ads/${item.id}`}
+              onDelete={fetchAds}
             />
             <button
               onClick={() => {
