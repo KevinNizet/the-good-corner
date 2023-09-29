@@ -41,6 +41,8 @@ export function RecentAds(): React.ReactNode {
               price={item.price}
               imgUrl={item.imgUrl}
               link={`/ads/${item.id}`}
+              //permet d'éxécuter la fonction fetchAds au moment du Delete
+              //depuis l'enfant AdCard
               onDelete={fetchAds}
             />
             <button

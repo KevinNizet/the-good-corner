@@ -8,8 +8,11 @@ export type AdType = {
   imgUrl: string;
   title: string;
   price: number;
+  description: string;
 };
 
+//les props d'une AdCard = AdType + la props onDelete (du parent)
+//onDelete = fonction sans paramètre et ne retournant rien
 export type AdCardProps = AdType & {
   onDelete?: () => void;
 };
@@ -23,6 +26,9 @@ export function AdCard(props: AdCardProps): React.ReactNode {
     });
     if (confirmDelete) {
       await axios.delete(`${API_URL}/ads/${props.id}`);
+      //notifie le parent qu'il y a eu un Delete, ce qui déclenche
+      //le reload des offres dans le parent automatiquement 
+      //fait remonter de l'info de l'enfant au parent 
       if (props.onDelete) {
         props.onDelete();
       }

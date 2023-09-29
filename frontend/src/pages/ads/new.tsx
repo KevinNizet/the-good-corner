@@ -63,7 +63,7 @@ export default function NewAd() {
         setHasBeenSent(true);
        setTimeout(() => {
         Router.push(`/`)
-       }, 3000); 
+       }, 2000); 
       }
     })
     .catch(error => {
