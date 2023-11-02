@@ -17,17 +17,17 @@ export default function Ad() {
   const [editedAdDetails, setEditedAdDetails] = useState({} as AdCardProps);
 
   //afficher les détails d'une annonce
-  useEffect(() => {
+  /* useEffect(() => {
     axios.get(`http://localhost:5001/ads/${adId}`).then((result) => {
       setAdDetails(result.data);
       setEditedAdDetails(result.data);
     }).catch((err) => {
       console.error(err);
     })
-  }, [adId]);
+  }, [adId]); */
 
   //supprimer une annonce
-  async function deleteAd() {
+  /* async function deleteAd() {
     const confirmDelete = window.confirm("Voulez-vous vraiment supprimer cette annonce ?");
     if (confirmDelete) {
       try {
@@ -46,7 +46,7 @@ export default function Ad() {
         });
       }
     }
-  }
+  } */
 
 // MàJ d'une annonce
   function startEditing() {
@@ -56,7 +56,7 @@ export default function Ad() {
     setEditedAdDetails(adDetails);
   }
 
-  async function saveChanges() {
+  /* async function saveChanges() {
     try {
       await axios.patch(`${API_URL}/ads/${adId}`, editedAdDetails);
       toast.success('Annonce mise à jour avec succès !', {
@@ -73,7 +73,7 @@ export default function Ad() {
         icon: '❌',
       });
     }
-  }
+  } */
 
   return (
     <Layout title="Ad">

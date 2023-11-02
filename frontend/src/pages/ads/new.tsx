@@ -26,15 +26,15 @@ export default function NewAd() {
   const [categoryId, setCategoryId] = useState<null | number>(null);
 
 
-  async function fetchCategories() {
+ /*  async function fetchCategories() {
     const result = await axios.get<CategoryType[]>(`${API_URL}/categories`);
     setCategories(result.data);
-  }
+  } */
 
-  useEffect(() => {
+/*   useEffect(() => {
     // mounting
     fetchCategories();
-  }, []);
+  }, []); */
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -51,7 +51,7 @@ export default function NewAd() {
     }
 
     //POST des données du formulaires
-    axios.post('http://localhost:5001/ads', data)
+   /*  axios.post('http://localhost:5001/ads', data)
     .then(response => {
       console.log("données envoyées à la BDD", data);
       if ("id" in response.data) {
@@ -68,7 +68,7 @@ export default function NewAd() {
     })
     .catch(error => {
       console.error("erreur lors de l'envoi", error);
-    });
+    }); */
 }
 
 

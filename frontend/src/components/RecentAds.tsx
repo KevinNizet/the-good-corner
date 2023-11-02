@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { AdCard, AdCardProps } from "./AdCard";
-import axios from "axios";
-import { API_URL } from "@/config";
+import { useQuery } from "@apollo/client";
+import { useState } from "react";
+import { AdCard, AdType } from "./AdCard";
+import { queryAllAds } from "@/graphql/queryAllAds";
+
 
 export function RecentAds(): React.ReactNode {
-  const [ads, setAds] = useState([] as AdCardProps[]);
   const [totalPrice, setTotalPrice] = useState(0);
 
   function addToTotal(price: number) {
@@ -12,27 +12,17 @@ export function RecentAds(): React.ReactNode {
     setTotalPrice(newTotalPrice);
   }
 
-  async function fetchAds() {
-    const result = await axios.get(API_URL + "/ads");
-    setAds(result.data);
-  }
-
-  //requête au serveur back pour récupérer les Ads
-  useEffect(() => {
-    // mounting
-    axios.get("http://localhost:5001/ads").then((result) => {
-      setAds(result.data)
-    }).catch((err) => {
-      console.error(err);
-    })
-    
-  }, []);
+  //utilisation de la queryAllAds 
+  const { data, loading,} = useQuery<{ items: AdType[] }>(queryAllAds);
+  // si data n'est pas défini, renvoi un tableau vide
+  const ads = data ? data.items : [];
 
   return (
     <main className="main-content">
       <h2>Annonces récentes</h2>
       <p>Prix total des offres sélectionnées : {totalPrice}€</p>
       <section className="recent-ads">
+      {loading === true && <p>Chargement des annonces</p>}
         {ads.map((item) => (
           <div key={item.id}>
             <AdCard
@@ -41,9 +31,11 @@ export function RecentAds(): React.ReactNode {
               price={item.price}
               imgUrl={item.imgUrl}
               link={`/ads/${item.id}`}
+              description={item.description}
+              category={item.category}
               //permet d'éxécuter la fonction fetchAds au moment du Delete
               //depuis l'enfant AdCard
-              onDelete={fetchAds}
+              /* onDelete={fetchAds} */
             />
             <button
               onClick={() => {

@@ -39,7 +39,7 @@ export class Ad extends BaseEntity {
   @Column({ nullable: true })
   @Length(0, 5000)
   @ValidateIf((object, value) => !!value)
-  @Field()
+  @Field({ nullable: true })
   description!: string;
 
   @ManyToOne(() => Category, (category) => category.ads)

@@ -1,0 +1,6 @@
+Pour lancer les serveurs : 
+
+Server front : se placer dans le dossier front > npm run dev
+Server back : se placer dans le dossier back > npm start
+
+Lancer les deux serveurs sur deux terminaux différents
