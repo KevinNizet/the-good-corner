@@ -5,11 +5,12 @@ import { TagsResolver } from "./controllers/resolvers/Tags";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { AdsResolver } from "./controllers/resolvers/Ads";
+import { CategoriesResolver } from "./controllers/resolvers/Categories";
 
 async function start() {
   //Création du schéma àpd des Resolver
   const schema = await buildSchema({
-    resolvers: [TagsResolver, AdsResolver],
+    resolvers: [TagsResolver, AdsResolver, CategoriesResolver],
   });
 
   //Création du serveur Apollo àpd du schéma
