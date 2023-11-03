@@ -9,16 +9,6 @@ import { queryAllCategories } from "@/graphql/queryAllCategories";
 
 
 export function Header(): React.ReactNode {
-  /* const  [categories, setCategories] = useState([] as CategoryProps[]);
-
-  //requête au serveur back pour récupérer les Catég
-  useEffect(() => {
-    axios.get("http://localhost:5001/categories").then((result) => {
-    setCategories(result.data);
-    }).catch((err) => {
-      console.error(err);
-    })
-  }, []); */
 
   const { data, error, loading } = useQuery<{ items: CategoryProps[] }>(
     queryAllCategories
