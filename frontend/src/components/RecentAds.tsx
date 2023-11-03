@@ -3,19 +3,34 @@ import { useState } from "react";
 import { AdCard, AdType } from "./AdCard";
 import { queryAllAds } from "@/graphql/queryAllAds";
 
+type RecentAdsProps = {
+  categoryId?: number;
+  searchWord?: string;
+};
 
-export function RecentAds(): React.ReactNode {
+export function RecentAds(props: RecentAdsProps): React.ReactNode {
   const [totalPrice, setTotalPrice] = useState(0);
 
+  //ajout du prix de chaque annonce au total
   function addToTotal(price: number) {
     const newTotalPrice = price + totalPrice;
     setTotalPrice(newTotalPrice);
   }
 
   //utilisation de la queryAllAds 
-  const { data, loading,} = useQuery<{ items: AdType[] }>(queryAllAds);
+  const { data, loading, refetch} = useQuery<{ items: AdType[] }>(queryAllAds, {
+    variables: {
+      where: {
+        ...(props.categoryId ? { categoryIn: [props.categoryId] } : {}),
+
+        //todo logique pour la recherche d'annonce via searchBar
+        /* ...(props.searchWord ? { searchTitle: props.searchWord } : {}), */
+      },
+    },
+  });
   // si data n'est pas défini, renvoi un tableau vide
   const ads = data ? data.items : [];
+
 
   return (
     <main className="main-content">
@@ -33,9 +48,6 @@ export function RecentAds(): React.ReactNode {
               link={`/ads/${item.id}`}
               description={item.description}
               category={item.category}
-              //permet d'éxécuter la fonction fetchAds au moment du Delete
-              //depuis l'enfant AdCard
-              /* onDelete={fetchAds} */
             />
             <button
               onClick={() => {
