@@ -28,7 +28,7 @@ export class Tag extends BaseEntity {
 
 @InputType()
 export class TagCreateInput {
-  @Field()
+  @Field({ nullable: true })
   name!: string;
 }
 

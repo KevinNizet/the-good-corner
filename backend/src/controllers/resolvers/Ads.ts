@@ -27,22 +27,7 @@ export class AdsResolver {
       queryWhere.price = LessThanOrEqual(Number(where.priceLte));
     }
 
-    /* const order: any = {};
-    if (
-      typeof req.query.orderByTitle === "string" &&
-      ["ASC", "DESC"].includes(req.query.orderByTitle)
-    ) {
-      order.title = req.query.orderByTitle; // req.query.orderByTitle = ASC | DESC
-    }
-
-    if (
-      typeof req.query.orderByPrice === "string" &&
-      ["ASC", "DESC"].includes(req.query.orderByPrice)
-    ) {
-      order.price = req.query.orderByPrice; // req.query.orderByTitle = ASC | DESC
-    } */
-
-    const ads = await Ad.find({
+     const ads = await Ad.find({
       where: queryWhere,
       //order,
       relations: {

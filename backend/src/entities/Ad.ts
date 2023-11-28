@@ -76,7 +76,7 @@ export class AdCreateInput {
   @Field()
   category!: ObjectId;
 
-  @Field(() => [ObjectId])
+  @Field(() => [ObjectId], { nullable: true })
   tags!: ObjectId[];
 }
 
