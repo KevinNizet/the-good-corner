@@ -124,6 +124,7 @@ export default function AdForm(props: AdFormProps) {
         {error === "category" && <p>Veuillez sélectionner une catégorie</p>}
         <form onSubmit={onSubmit}>
           <input
+          className="adform-input"
             type="text"
             name="title"
             placeholder="Titre de l'annonce"
@@ -133,6 +134,7 @@ export default function AdForm(props: AdFormProps) {
           <br />
           <br />
           <textarea
+          className="adform-input"
             name="description"
             placeholder="Description de l'annonce"
             value={description}
@@ -141,6 +143,7 @@ export default function AdForm(props: AdFormProps) {
           <br />
           <br />
           <input
+          className="adform-input"
             type="text"
             name="imgUrl"
             placeholder="Lien de l'image"
@@ -150,6 +153,7 @@ export default function AdForm(props: AdFormProps) {
           <br />
           <br />
           <input
+          className="adform-input"
             type="number"
             name="price"
             placeholder="0,00€"
@@ -159,6 +163,7 @@ export default function AdForm(props: AdFormProps) {
           <br />
           <br />
           <select
+          className="adform-input"
             name="categoryId"
             value={categoryId + ""}
             onChange={(e) => setCategoryId(Number(e.target.value))}
@@ -173,6 +178,7 @@ export default function AdForm(props: AdFormProps) {
           <br />
           <br />
           <select
+          className="adform-input"
             name="tagId"
             value={tagId + ""}
             onChange={(e) => setTagId(Number(e.target.value))}
@@ -186,7 +192,7 @@ export default function AdForm(props: AdFormProps) {
           </select>
           <br />
           <br />
-          <button type="submit" disabled={loading}>
+          <button className="ad-card-button" type="submit" disabled={loading}>
             {props.ad ? "Modifier" : "Poster l'annonce"}
           </button>
         </form>
