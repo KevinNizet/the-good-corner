@@ -75,7 +75,7 @@ export function AdCard(props: AdCardProps): JSX.Element {
         
       </a>
       <div className='ad-card-button-div'>
-      <button className="ad-card-button" onClick={addToTotal}>Ajouter {props.price}€ au total</button>
+      <button className="ad-card-button" onClick={addToTotal}>Ajouter le prix au total</button>
       <button className="ad-card-button" onClick={deleteAd}>Supprimer</button>
       </div>
     </div>
