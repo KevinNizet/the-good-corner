@@ -10,6 +10,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { queryAllAds } from "@/graphql/queryAllAds";
+import { queryAllTags } from "@/graphql/queryAllTags";
 
 type AdFormData = {
   title: string;
@@ -23,6 +24,11 @@ type AdFormProps = {
   ad?: AdType;
 };
 
+type TagType = {
+  name: string;
+  id: number;
+}
+
 export default function AdForm(props: AdFormProps) {
   const [error, setError] = useState<"title" | "price" | "category">();
 
@@ -31,7 +37,7 @@ export default function AdForm(props: AdFormProps) {
   const [imgUrl, setImgUrl] = useState("");
   const [price, setPrice] = useState(0);
   const [categoryId, setCategoryId] = useState<number>(0); // Valeur par défaut non nulle
-
+  const [tagId, setTagId] = useState<number>(0);
   const {
     data: categoriesData,
   } = useQuery<{ items: CategoryType[] }>(queryAllCategories);
@@ -102,6 +108,11 @@ export default function AdForm(props: AdFormProps) {
     }
   }, [props.ad]);
 
+
+
+  const { data: tagsData } = useQuery<{ items: TagType[] }>(queryAllTags);
+  const tags = tagsData ? tagsData.items : [];
+
   return (
     <Layout title="Nouvelle offre">
       <main className="main-content">
@@ -156,6 +167,20 @@ export default function AdForm(props: AdFormProps) {
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
+              </option>
+            ))}
+          </select>
+          <br />
+          <br />
+          <select
+            name="tagId"
+            value={tagId + ""}
+            onChange={(e) => setTagId(Number(e.target.value))}
+          >
+            <option value="0">Sélectionnez un tag</option>
+            {tags.map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.name}
               </option>
             ))}
           </select>
