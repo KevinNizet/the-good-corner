@@ -1,3 +1,4 @@
+// AdCard.tsx
 import toast, { Toaster } from 'react-hot-toast';
 import { gql, useMutation } from "@apollo/client";
 import { queryAllAds } from "../graphql/queryAllAds";
@@ -13,7 +14,7 @@ export type AdType = {
   category: CategoryProps | null;
 };
 
-//Query graphQl
+// Query graphQl
 const mutationDeleteAd = gql`
   mutation deleteAd($id: ID!) {
     deleteAd(id: $id) {
@@ -25,6 +26,7 @@ const mutationDeleteAd = gql`
 
 export type AdCardProps = AdType & {
   onDelete?: () => void;
+  addToTotal?: (price: number) => void; // Nouvelle prop pour la fonction addToTotal
 };
 
 export function AdCard(props: AdCardProps): JSX.Element {
@@ -51,7 +53,12 @@ export function AdCard(props: AdCardProps): JSX.Element {
       }
     }
   }
-  
+
+  function addToTotal() {
+    if (props.addToTotal) {
+      props.addToTotal(props.price);
+    }
+  }
 
   return (
     <div className="ad-card-container">
@@ -62,7 +69,8 @@ export function AdCard(props: AdCardProps): JSX.Element {
           <div className="ad-card-price">{props.price} €</div>
         </div>
       </a>
-      <button onClick={deleteAd}>Supprimer</button> 
+      <button className="ad-card-button" onClick={addToTotal}>Ajouter {props.price}€ au total</button>
+      <button className="ad-card-button" onClick={deleteAd}>Supprimer</button>
     </div>
   );
 }
