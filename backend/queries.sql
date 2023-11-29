@@ -14,12 +14,12 @@ CREATE TABLE Ad (
 
 INSERT INTO Category (name) VALUES ("Cars"), ("Bikes");
 INSERT INTO Ad (title, owner, categoryId) VALUES 
-("Super bike", "toto@aleygues.fr", 2), 
-("Super car", "toto@aleygues.fr", 1);
+("Super bike", "kevino@gmail.fr", 2), 
+("Super car", "kevin@gmail.fr", 1);
 
 PRAGMA foreign_keys = ON;
 INSERT INTO Ad (title, owner, categoryId) VALUES 
-("Shoud work", "toto@aleygues.fr", 2);
+("Shoud work", "kevin@gmail.fr", 2);
 
 SELECT 
   a.*, 
