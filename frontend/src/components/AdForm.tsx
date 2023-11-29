@@ -11,6 +11,8 @@ import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { queryAllAds } from "@/graphql/queryAllAds";
 import { queryAllTags } from "@/graphql/queryAllTags";
+import { FaPenToSquare } from "react-icons/fa6";
+
 
 type AdFormData = {
   title: string;
@@ -116,7 +118,7 @@ export default function AdForm(props: AdFormProps) {
   return (
     <Layout title="Nouvelle offre">
       <main className="main-content">
-        <p>{props.ad ? "Modifier l'offre" : "Nouvelle offre"}</p>
+        <h2 className="adform-modification-title"> <FaPenToSquare /> {props.ad ? "Modifier l'offre" : "Nouvelle offre"}</h2>
         {error === "price" && <p>Le prix doit être positif</p>}
         {error === "title" && (
           <p>Le titre est requis et doit faire plus de 3 caractères</p>
