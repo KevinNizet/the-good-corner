@@ -4,8 +4,8 @@ import { gql } from "@apollo/client";
 //variable définie dans composant RecentAds.tsx
 
 export const queryAllAds = gql`
-  query ads($where: AdsWhere) {
-    items: allAds(where: $where) {
+  query AllAds($skip: Int, $take: Int, $where: AdsWhere) {
+    items: allAds(skip: $skip, take: $take, where: $where) {
       id
       title
       price
@@ -15,5 +15,6 @@ export const queryAllAds = gql`
         id
       }
     }
+    count: allAdsCount(where: $where)
   }
 `;

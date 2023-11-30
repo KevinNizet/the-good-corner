@@ -7,7 +7,9 @@ import { In, Like, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 export class AdsResolver {
   @Query(() => [Ad])
   async allAds(
-    @Arg("where", { nullable: true }) where?: AdsWhere
+    @Arg("where", { nullable: true }) where?: AdsWhere,
+    @Arg("take", () => Int, { nullable: true }) take?: number,
+    @Arg("skip", () => Int, { nullable: true }) skip?: number
   ): Promise<Ad[]> {
     const queryWhere: any = {};
 
@@ -28,6 +30,8 @@ export class AdsResolver {
     }
 
      const ads = await Ad.find({
+      take: take ?? 50,
+      skip,
       where: queryWhere,
       //order,
       relations: {
@@ -36,6 +40,34 @@ export class AdsResolver {
       },
     });
     return ads;
+  }
+
+  @Query(() => Int)
+  async allAdsCount(
+    @Arg("where", { nullable: true }) where?: AdsWhere
+  ): Promise<number> {
+    const queryWhere: any = {};
+
+    if (where?.categoryIn) {
+      queryWhere.category = { id: In(where.categoryIn) };
+    }
+
+    if (where?.searchTitle) {
+      queryWhere.title = Like(`%${where.searchTitle}%`);
+    }
+
+    if (where?.priceGte) {
+      queryWhere.price = MoreThanOrEqual(Number(where.priceGte));
+    }
+
+    if (where?.priceLte) {
+      queryWhere.price = LessThanOrEqual(Number(where.priceLte));
+    }
+
+    const count = await Ad.count({
+      where: queryWhere,
+    });
+    return count;
   }
 
   @Query(() => Ad, { nullable: true })
