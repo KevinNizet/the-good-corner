@@ -35,14 +35,19 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
   // Si data n'est pas défini, renvoi un tableau vide
   const ads = data ? data.items : [];
 
+  //pagination
   const count = data ? data.count : 0;
   const pagesCount = Math.ceil(count / pageSize);
 
+  //nombre d'ads pour le cas où une ad est présente sur la page
+  const adsCount = ads.length;
   return (
     <main className="main-content">
       <h2>Annonces récentes</h2>
       <p>Prix total des offres sélectionnées : {totalPrice}€</p>
-      <section className="recent-ads">
+      {/* //si une seul carte d'Ad est présente sur le carte, on modifie la grille définie dans le CSS
+      // permet d'avoir une taille non déformée */}
+      <section className={`recent-ads ${adsCount === 1 ? 'single-card' : ''}`}>
         {loading === true && <p>Chargement des annonces</p>}
         {ads.map((item) => (
           <div key={item.id}>

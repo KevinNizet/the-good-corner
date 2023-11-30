@@ -126,6 +126,12 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
 }
+/* Une seule colonne si une seule carte est présente */
+.recent-ads.single-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 0.5fr)); 
+}
+
 
 .ad-card-container {
   border-radius: 8px;
@@ -191,6 +197,7 @@ h1 {
   border-radius: 8px;
   min-height: 300px;
   max-height: 300px;
+
 }
 .ad-card-image-detail {
   width: 100%;
