@@ -21,10 +21,10 @@ services:
     restart: always
     ports:
       - 8080:8080
-  #frontend - géré dans le docker-compose-prod
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./frontend/src:/app/src
+  #frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/app/src
