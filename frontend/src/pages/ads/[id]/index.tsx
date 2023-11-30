@@ -27,7 +27,7 @@ export default function Ad(): React.ReactNode {
             <h2>{ad.title}</h2> <button className="ad-card-button" onClick={() => router.push(`/ads/${ad.id}/edit`)}>Modifier l'offre</button>
             <p>{ad.description}</p>
             <p>{ad.price} €</p>
-            {ad.imgUrl && <img className="ad-card-image" src={ad.imgUrl} alt="Image de l'annonce" />}
+            {ad.imgUrl && <img className="ad-card-image-detail" src={ad.imgUrl} alt="Image de l'annonce" />}
             
           </>
         ) : adId ? (
