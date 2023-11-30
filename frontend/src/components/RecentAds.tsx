@@ -59,29 +59,34 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
           </div>
         ))}
       </section>
-      <p>Nombre de résultats par page ?</p>
-      <button onClick={() => setPageSize(5)}>5</button>
-      <button onClick={() => setPageSize(10)}>10</button>
-      <button onClick={() => setPageSize(20)}>20</button>
-      <br />
-      <br />
+      <div className="div-pagination1"> 
+      <p>Nombre de résultats par page </p>
+      <button className="ad-card-button" onClick={() => setPageSize(5)}>5</button>
+      <button className="ad-card-button" onClick={() => setPageSize(10)}>10</button>
+      <button className="ad-card-button" onClick={() => setPageSize(20)}>20</button>
+ 
+      </div>
+      <div className="div-pagination2"> 
       <p>
-        Page actuelle : {page} ; nombre total d'éléments : {count}
+        Page actuelle : {page} | Nombre total d'annonces : {count}
       </p>
+      
+      </div>
+      <div className="div-pagination3"> 
       <button
-        disabled={page === 0}
-        onClick={() => setPage(Math.max(page - 1, 0))}
-      >
-        Précédent
+      className={`ad-card-button ${page === 0 ? 'disabled-button' : ''}`}
+      disabled={page === 0}
+      onClick={() => setPage(Math.max(page - 1, 0))}
+      > Précédent
       </button>
       <button
+      className={`ad-card-button ${page === pagesCount - 1 ? 'disabled-button' : ''}`}
         disabled={page === pagesCount - 1}
         onClick={() => setPage(Math.min(page + 1, pagesCount))}
       >
         Suivant
       </button>
-      <br />
-      <br />
+      </div>
     </main>
   );
 }

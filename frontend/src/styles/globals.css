@@ -285,3 +285,31 @@ h1 {
 .adform-modification-title {
   padding: 20px 0px 40px 0px;
 }
+
+.div-pagination1 {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 35px;
+  gap: 10px;
+}
+.div-pagination2 {
+  font-size: small;
+}
+.div-pagination3 {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.disabled-button {
+  background-color: #6666662e;
+  cursor: default;
+}
+.disabled-button:hover {
+  background-color: #6666662e;
+  cursor: default;
+}
