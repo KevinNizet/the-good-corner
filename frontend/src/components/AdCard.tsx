@@ -5,6 +5,10 @@ import { queryAllAds } from "../graphql/queryAllAds";
 import { CategoryProps } from "./Category";
 import { FiFileText } from "react-icons/fi";
 import { IoPricetagsOutline } from "react-icons/io5";
+import { MdOutlineTag } from "react-icons/md";
+import { queryAllTags } from '@/graphql/queryAllTags';
+import { queryAllCategories } from '@/graphql/queryAllCategories';
+
 
 
 export type AdType = {
@@ -15,6 +19,7 @@ export type AdType = {
   price: number;
   description: string;
   category: CategoryProps | null;
+  tag: { id: string; name: string } | null;
 };
 
 // Query graphQl
@@ -29,7 +34,8 @@ const mutationDeleteAd = gql`
 
 export type AdCardProps = AdType & {
   onDelete?: () => void;
-  addToTotal?: (price: number) => void; // Nouvelle prop pour la fonction addToTotal
+  addToTotal?: (price: number) => void;
+  tag?: { id: string; name: string } | null;
 };
 
 export function AdCard(props: AdCardProps): JSX.Element {
@@ -68,16 +74,23 @@ export function AdCard(props: AdCardProps): JSX.Element {
       <a className="ad-card-link" href={props.link}>
         <img className="ad-card-image" src={props.imgUrl} alt={props.title} />
         <div className="ad-card-text">
-          <div className="ad-card-title"><FiFileText />  {props.title}</div>
-          <div className="ad-card-price"> <IoPricetagsOutline /> {props.price} €</div>
+          <div className="ad-card-title"><FiFileText /> {props.title}</div>
+          <div className="ad-card-price"><IoPricetagsOutline /> {props.price} €</div>
         </div>
-        <div className="ad-card-description"> {props.description}</div>
-        
+        <div className="ad-card-description">
+          {props.description}
+          
+           {/* Gestion du tag */}
+          <div className='ad-card-tags'>
+            {props.tag && <span key={props.tag.id}><MdOutlineTag /> {props.tag.name}</span>}
+          </div>
+        </div>
       </a>
       <div className='ad-card-button-div'>
-      <button className="ad-card-button" onClick={addToTotal}>Ajouter le prix au total</button>
-      <button className="ad-card-button" onClick={deleteAd}>Supprimer</button>
+        <button className="ad-card-button" onClick={addToTotal}>Ajouter le prix au total</button>
+        <button className="ad-card-button" onClick={deleteAd}>Supprimer</button>
       </div>
     </div>
   );
+ 
 }

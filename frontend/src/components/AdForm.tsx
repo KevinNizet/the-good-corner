@@ -20,6 +20,7 @@ type AdFormData = {
   imgUrl: string;
   price: number;
   category: { id: number };
+  tags: { id: number }[];
 };
 
 type AdFormProps = {
@@ -51,7 +52,7 @@ export default function AdForm(props: AdFormProps) {
     refetchQueries: [queryAllAds],
   });
   const [doUpdate, { loading: updateLoading }] = useMutation(mutationUpdateAd, {
-    refetchQueries: [queryAd, queryAllAds],
+    refetchQueries: [queryAd, queryAllAds, queryAllTags],
   });
   const loading = createLoading || updateLoading;
 
@@ -68,6 +69,7 @@ export default function AdForm(props: AdFormProps) {
         imgUrl,
         price,
         category: { id: categoryId },
+        tags: tagId !== 0 ? [{ id: tagId }] : [],
       };
 
       if (data.title.trim().length < 3) {

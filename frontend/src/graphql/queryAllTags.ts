@@ -5,6 +5,9 @@ export const queryAllTags = gql`
     items: allTags {
       id
       name
+      ads {
+        id
+      }
     }
   }
 `;

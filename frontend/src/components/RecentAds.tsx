@@ -3,6 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { AdCard, AdType, AdCardProps } from "./AdCard";
 import { queryAllAds } from "@/graphql/queryAllAds";
+import { queryAllTags } from "@/graphql/queryAllTags";
 
 type RecentAdsProps = {
   categoryId?: number;
@@ -41,13 +42,18 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
 
   //nombre d'ads pour le cas où une ad est présente sur la page
   const adsCount = ads.length;
+
+  // Utilisation de la queryAllTags
+  const { data: tagsData, loading: tagsLoading } = useQuery(queryAllTags); 
+
   return (
     <main className="main-content">
       <h2>Annonces récentes</h2>
       <p>Prix total des offres sélectionnées : {totalPrice}€</p>
-      {/* //si une seul carte d'Ad est présente sur le carte, on modifie la grille définie dans le CSS
-      // permet d'avoir une taille non déformée */}
+      {/* si une seul carte d'Ad est présente sur le carte, on modifie la grille définie dans le CSS
+      permet d'avoir une taille de carte non déformée */}
       <section className={`recent-ads ${adsCount === 1 ? 'single-card' : ''}`}>
+        
         {loading === true && <p>Chargement des annonces</p>}
         {ads.map((item) => (
           <div key={item.id}>
@@ -59,7 +65,8 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
               link={`/ads/${item.id}`}
               description={item.description}
               category={item.category}
-              addToTotal={addToTotal} // Passer la fonction addToTotal en tant que prop
+              addToTotal={addToTotal} // Passe la fonction addToTotal en tant que prop
+              tag={tagsData ? tagsData.items.find((tag: { ads: any[]; })  => tag.ads.some((ad: { id: number; }) => ad.id === item.id)) : null}
             />
           </div>
         ))}
@@ -74,6 +81,7 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
       <div className="div-pagination2"> 
       <p>
         Page actuelle : {page} | Nombre total d'annonces : {count}
+       
       </p>
       
       </div>
