@@ -8,6 +8,7 @@ import { IoPricetagsOutline } from "react-icons/io5";
 import { MdOutlineTag } from "react-icons/md";
 import { queryAllTags } from '@/graphql/queryAllTags';
 import { queryAllCategories } from '@/graphql/queryAllCategories';
+import { mutationDeleteAd } from '@/graphql/mutationDeleteAd';
 
 
 
@@ -21,16 +22,6 @@ export type AdType = {
   category: CategoryProps | null;
   tag: { id: string; name: string } | null;
 };
-
-// Query graphQl
-const mutationDeleteAd = gql`
-  mutation deleteAd($id: ID!) {
-    deleteAd(id: $id) {
-      id
-      title
-    }
-  }
-`;
 
 export type AdCardProps = AdType & {
   onDelete?: () => void;
