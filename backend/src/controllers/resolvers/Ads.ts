@@ -17,6 +17,10 @@ export class AdsResolver {
       queryWhere.category = { id: In(where.categoryIn) };
     }
 
+    if (where?.tagIn) {
+      queryWhere.tags = { id: In(where.tagIn) };
+    }
+
     if (where?.searchTitle) {
       queryWhere.title = Like(`%${where.searchTitle}%`);
     }

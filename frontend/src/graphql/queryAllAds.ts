@@ -14,6 +14,9 @@ export const queryAllAds = gql`
       category {
         id
       }
+      tags {
+        id
+      }
     }
     count: allAdsCount(where: $where)
   }

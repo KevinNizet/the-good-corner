@@ -106,6 +106,9 @@ export class AdsWhere {
   @Field(() => [ID], { nullable: true })
   categoryIn?: number[];
 
+  @Field(() => [ID], { nullable: true })
+  tagIn?: number[];
+
   @Field(() => String, { nullable: true })
   searchTitle?: string;
 

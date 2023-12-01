@@ -7,6 +7,7 @@ Server back :
     se placer dans le dossier back > npm start. 
     ==> Avec le Dockerfil du back fonctionnel, lancer le serveur via : docker-compose up --build
     localhost:5001
+    (Lancer le Docker daemon, sinon cela ne fonctionne pas)
 
     Adminer : 
     localhost:8080

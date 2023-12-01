@@ -125,6 +125,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
+  padding-top: 20px;
 }
 /* Une seule colonne si une seule carte est présente */
 .recent-ads.single-card {
@@ -329,4 +330,37 @@ h1 {
 .disabled-button:hover {
   background-color: #6666662e;
   cursor: default;
+}
+
+.global-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+}
+
+.recent-ads-total-price {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.all-tags {
+  margin: 20px;
+}
+.total-price {
+  margin: 20px 0px 20px 50px;
+}
+.icons {
+  margin-right: 5px;
+}
+
+.nav-div {
+  padding-left: 10px;
+}
+
+.vertical-bar {
+  border-left: 1.5px solid #ccc;
+  height: 65px;
+  margin-left: 10px;
 }

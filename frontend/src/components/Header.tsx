@@ -1,12 +1,10 @@
 import Link from "next/link";
 import React from "react";
 import { Category, CategoryProps } from "./Category";
-import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { queryAllCategories } from "@/graphql/queryAllCategories";
 import { useRouter } from "next/router";
-
 
 
 export function Header(): React.ReactNode {
@@ -24,9 +22,6 @@ export function Header(): React.ReactNode {
     queryAllCategories
   );
   const categories = data ? data.items : [];
-
-
-
 
   return (
     <header className="header">
@@ -65,6 +60,8 @@ export function Header(): React.ReactNode {
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>
       </div>
+
+      {/* gestion des catégories */}
       <nav className="categories-navigation">
       {loading === true && <p>Chargement</p>}
         {categories?.map((category, index) => (
@@ -72,11 +69,11 @@ export function Header(): React.ReactNode {
             <Category
               name={category.name}
               id={category.id}
-            />{" "}
+            />
             {index < categories.length - 1 && "•"}
           </React.Fragment>
         ))}
-      </nav>
+      </nav>      
     </header>
   );
 }
