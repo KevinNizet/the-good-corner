@@ -6,11 +6,12 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { AdsResolver } from "./controllers/resolvers/Ads";
 import { CategoriesResolver } from "./controllers/resolvers/Categories";
+import { UsersResolver } from "./controllers/resolvers/Users";
 
 async function start() {
   //Création du schéma àpd des Resolver
   const schema = await buildSchema({
-    resolvers: [TagsResolver, AdsResolver, CategoriesResolver],
+    resolvers: [TagsResolver, AdsResolver, CategoriesResolver, UsersResolver],
   });
 
   //Création du serveur Apollo àpd du schéma
