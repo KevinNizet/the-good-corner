@@ -1,11 +1,14 @@
 /* resolver */
 
-import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, ID, Mutation, Query, Resolver } from "type-graphql";
 import { validate } from "class-validator";
 import { User, UserCreateInput } from "../../entities/User";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { Token } from "graphql";
+import cookies from 'cookies';
+import Cookies from "cookies";
+import { ContextType } from "../../auth";
+
 
 @Resolver(User)
 export class UsersResolver {
@@ -23,6 +26,14 @@ export class UsersResolver {
     return user;
   }
 
+  //query permettant de récupérer son propre profil
+  @Authorized()
+  @Query(() => User)
+  async mySelf(@Ctx() context: ContextType): Promise<User> {
+    return context.user as User;
+  }
+
+
   @Mutation(() => User)
   async signup(
     @Arg("data", () => UserCreateInput) data: UserCreateInput
@@ -35,7 +46,7 @@ export class UsersResolver {
       
     //error custom si l'utilisateur existe déjà. 
     //vient compléter la contrainte d'unicité spécifiée dans l'entité
-    const existingUser = await User.findBy({email: data.email});
+    const existingUser = await User.findOneBy({email: data.email});
       if(existingUser) {
         throw new Error(`User already exists`);
     }
@@ -54,6 +65,7 @@ export class UsersResolver {
 
   @Mutation(() => User, { nullable: true})
   async signin(
+    @Ctx() context: ContextType, 
     @Arg("email") email: string,
     @Arg("password") password: string
   ): Promise<User | null> {
@@ -70,12 +82,22 @@ export class UsersResolver {
               userId: existingUser.id, 
             }, 
             //clé secrete du server
-            "548b65a3-1b86-495f-85a5-5f4d047adc47"
+            process.env.JWT_SECRET || "supersecret"
           );
 
-          console.log(token)
-
-
+          
+          //modifier le header de réponse pour avoir set-cookie
+          //et stocker le token côté client dans les cookies
+          
+          const cookies = new Cookies(context.req, context.res);
+          cookies.set("token", token, {
+            httpOnly: true,
+            secure: false, 
+            maxAge: 1000 * 60 * 60 * 72,
+          });
+      
+          
+          
           return existingUser;
         } else {
           return null;

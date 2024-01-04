@@ -13,7 +13,7 @@ import { Category } from "./Category";
 import { Tag } from "./Tag";
 import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
 import { ObjectId } from "./ObjectId";
-import { IsExisting } from "../utils";
+import { User } from "./User";
 
 @Entity()
 @ObjectType()
@@ -44,7 +44,6 @@ export class Ad extends BaseEntity {
 
   @ManyToOne(() => Category, (category) => category.ads)
   @Field(() => Category, { nullable: true })
-  @IsExisting(() => Category)
   category!: Category;
 
   @ManyToMany(() => Tag, (tag) => tag.ads, { cascade: ["remove"] })
@@ -57,6 +56,10 @@ export class Ad extends BaseEntity {
   @CreateDateColumn()
   @Field()
   createdAt!: Date;
+
+  @ManyToOne(() => User, (user) => user.ads)
+  @Field(() => User)
+  createdBy!: User;
 }
 
 @InputType()
