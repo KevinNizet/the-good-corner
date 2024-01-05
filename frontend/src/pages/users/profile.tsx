@@ -1,12 +1,14 @@
+import { Layout } from "@/components/Layout";
+
+
 /* eslint-disable react/no-unescaped-entities */
 import { useQuery } from "@apollo/client";
-import AdForm from "../../components/AdForm";
-import { Layout } from "@/components/Layout";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { useRouter } from "next/router";
 
-export default function NewAd() {
-  //Proctection pour permettre publication seulement si utilisateur connecté
+export default function Profile(): React.ReactNode {
+
+  //Proctection pour afficher la page de profile quand l'utilisateur est connecté
   const { data, loading, error } = useQuery(queryMySelf);
   const router = useRouter();
 
@@ -23,12 +25,14 @@ export default function NewAd() {
   //item est un alias pour queryMySelf
   //si l'utilsateur est connecté, on retourne le formulaire
   if (data.item) {
+    const me = data.item
     return (
-      <Layout title="Nouvelle offre">
+      <Layout title="Mon profile">
         <main className="main-content">
-          <AdForm />
+          <p>Page de profile</p>
+          <p>Mon adresse est : {me.email}</p>
         </main>
       </Layout>
     );
-  }
+}
 }
