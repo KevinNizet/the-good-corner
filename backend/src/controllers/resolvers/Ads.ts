@@ -53,7 +53,6 @@ export class AdsResolver {
     return ads;
   }
 
-  @Authorized()
   @Query(() => Int)
   async allAdsCount(
     @Arg("where", { nullable: true }) where?: AdsWhere

@@ -1,17 +1,49 @@
 import "@/styles/globals.css";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from "@apollo/client";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 
-const client = new ApolloClient({
+const link = createHttpLink({
   uri: "http://localhost:5001/",
-  cache: new InMemoryCache(),
+  credentials: "include",
 });
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link,
+});
+
+
+/* const publicPages = ["/", "/signin", "/signup", "/ads/[id]"]; */
+
+/* function Auth(props: { children: React.ReactNode }) {
+  const { data, loading, error } = useQuery(queryMe);
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log("Navigating, new path =>", router.pathname);
+    if (publicPages.includes(router.pathname) === false) {
+      console.log("Seems to be a private page");
+      if (error) {
+        console.log("Not connected, redirecting");
+        router.replace("/signin");
+      }
+    }
+  }, [router, error]);
+
+  if (loading) {
+    return <p>Chargement</p>;
+  }
+
+  return props.children;
+} */
 
 function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />
+     {/*  <Auth> */}
+        <Component {...pageProps} />
+      {/* </Auth> */}
     </ApolloProvider>
   );
 }

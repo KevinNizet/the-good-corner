@@ -37,7 +37,7 @@ export const customAuthChecker: AuthChecker<ContextType> = async (
             return false;
           }
         } else {
-          console.error("invalid token, msising userid");
+          console.error("invalid token, missing userid");
           return false;
         }
       } catch {
