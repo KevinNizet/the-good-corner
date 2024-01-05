@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { Category, CategoryProps } from "./Category";
 import { useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient ,useMutation, useQuery } from "@apollo/client";
 import { queryAllCategories } from "@/graphql/queryAllCategories";
 import { useRouter } from "next/router";
 import { UserType } from "@/types";
@@ -27,15 +27,18 @@ export function Header(): React.ReactNode {
   const categories = data ? data.items : [];
 
   //info de l'utilisateur connectée
-  const { data: meData, error: meError } = useQuery<{item: UserType}>(queryMySelf);
-  const me = meError ? undefined : meData?.item;
+  const { data: meData } = useQuery<{ item: UserType | null }>(queryMySelf);
+  const me = meData?.item;
 
   const [doSignout] = useMutation(mutationSignout, {
     refetchQueries: [queryMySelf],
-  })
+  }); 
+
+  const apolloClient = useApolloClient();
 
   //boutton de déconnexion
   async function logout() {
+    apolloClient.clearStore();
     doSignout();
   }
 

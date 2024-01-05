@@ -10,12 +10,17 @@ export default function EditAd() {
   const router = useRouter();
   const adId = router.query.id;
 
+  console.log(adId)
+
   const { data } = useQuery<{ item: AdType }>(queryAd, {
     variables: {
       id: adId,
     },
     skip: adId === undefined,
   });
+
+  console.log("query data", data)
+
   const ad = data ? data.item : null;
 
   return (

@@ -1,17 +1,15 @@
 import { Layout } from "@/components/Layout";
-
-
 /* eslint-disable react/no-unescaped-entities */
 import { useQuery } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
-import { useRouter } from "next/router";
 import { UserType } from "@/types";
 
 export default function Profile(): React.ReactNode {
   //récupération des infos de l'utilisateur connecté
-  const { data: meData, error: meError } = useQuery<{item: UserType}>(queryMySelf);
+  const { data: meData } = useQuery<{ item: UserType | null }>(queryMySelf);
   //si erreur à la récupération du profile, pas de profile, sinon, on récupère les infos
-  const me = meError ? undefined : meData?.item;
+  const me = meData?.item;
+  console.log(me);
 
   //Refacto: 
   //Logique de protection des pages délocalisée dans _app.tsx

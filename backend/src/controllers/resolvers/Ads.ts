@@ -1,4 +1,14 @@
-import { Arg, ID, Mutation, Query, Resolver, Int, Ctx, Authorized, AuthenticationError } from "type-graphql";
+import {
+  Arg,
+  ID,
+  Mutation,
+  Query,
+  Resolver,
+  Int,
+  Ctx,
+  Authorized,
+  AuthenticationError,
+} from "type-graphql";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../../entities/Ad";
 import { validate } from "class-validator";
 import { In, Like, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
@@ -15,9 +25,6 @@ export class AdsResolver {
     @Arg("take", () => Int, { nullable: true }) take?: number,
     @Arg("skip", () => Int, { nullable: true }) skip?: number
   ): Promise<Ad[]> {
-
-
-
     const queryWhere: any = {};
 
     if (where?.categoryIn) {
@@ -40,7 +47,7 @@ export class AdsResolver {
       queryWhere.price = LessThanOrEqual(Number(where.priceLte));
     }
 
-     const ads = await Ad.find({
+    const ads = await Ad.find({
       take: take ?? 50,
       skip,
       where: queryWhere,
@@ -123,11 +130,12 @@ export class AdsResolver {
       relations: { tags: true, createdBy: true },
     });
 
+    console.log(ad)
 
     if (ad && ad.createdBy.id === context.user?.id) {
-      merge(ad, data)
+      merge(ad, data);
 
-  /*     // we should keep existing relations
+      /*     // we should keep existing relations
        if (data.tags) {
         data.tags = data.tags.map((entry) => {
           const existingRelation = ad.tags.find(
@@ -137,7 +145,7 @@ export class AdsResolver {
         });
       } */
 
-      Object.assign(ad, data); 
+      Object.assign(ad, data);
 
       const errors = await validate(ad);
       if (errors.length === 0) {
@@ -153,7 +161,7 @@ export class AdsResolver {
         throw new Error(`Error occured: ${JSON.stringify(errors)}`);
       }
     } else {
-      return null
+      return null;
     }
   }
 
@@ -161,23 +169,26 @@ export class AdsResolver {
   @Mutation(() => Ad, { nullable: true })
   async deleteAd(
     @Ctx() context: ContextType,
-    @Arg("id", () => ID) id: number): Promise<Ad | null> {
-// Check if the user is authenticated and verified
+    @Arg("id", () => ID) id: number
+  ): Promise<Ad | null> {
+    // Check if the user is authenticated and verified
 
-const ad = await Ad.findOne({
-  where: { id: id },
-});
+    const ad = await Ad.findOne({
+      where: { id: id },
+      // left join relation need to be satisfied
+      relations : {createdBy: true}
+    });
 
-if (ad) {
-  // Check if the user is the creator of the ad
-  if (ad.createdBy.id === context.user?.id) {
-    await ad.remove();
-    ad.id = id;
-  } else {
-    throw new AuthenticationError("User is not the creator of the ad.");
+    if (ad) {
+      // Check if the user is the creator of the ad and if the connected user are the same
+      if (ad.createdBy.id === context.user?.id) {
+        await ad.remove();
+        ad.id = id;
+      } else {
+        throw new AuthenticationError("User is not the creator of the ad.");
+      }
+    }
+
+    return ad;
   }
-}
-
-return ad;
-}
 }
