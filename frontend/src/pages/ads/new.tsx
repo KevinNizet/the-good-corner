@@ -1,12 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useQuery } from "@apollo/client";
 import AdForm from "../../components/AdForm";
 import { Layout } from "@/components/Layout";
-import { queryMySelf } from "@/graphql/queryMySelf";
-import { useRouter } from "next/router";
+
 
 export default function NewAd() {
-  //Proctection pour permettre publication seulement si utilisateur connecté
+
+//Refacto : 
+//Logique de protection ci-dessous délocalisée dans _app.tsx avec le composant parent Auth
+//permettant de l'appeller sur toutes les routes protégées
+
+/*   //Proctection pour permettre publication seulement si utilisateur connecté
   const { data, loading, error } = useQuery(queryMySelf);
   const router = useRouter();
 
@@ -30,5 +33,13 @@ export default function NewAd() {
         </main>
       </Layout>
     );
-  }
+  } */
+
+  return (
+    <Layout title="Nouvelle offre">
+      <main className="main-content">
+        <AdForm />
+      </main>
+    </Layout>
+  );
 }

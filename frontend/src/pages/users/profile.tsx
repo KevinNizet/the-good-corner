@@ -5,11 +5,19 @@ import { Layout } from "@/components/Layout";
 import { useQuery } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { useRouter } from "next/router";
+import { UserType } from "@/types";
 
 export default function Profile(): React.ReactNode {
+  //récupération des infos de l'utilisateur connecté
+  const { data: meData, error: meError } = useQuery<{item: UserType}>(queryMySelf);
+  //si erreur à la récupération du profile, pas de profile, sinon, on récupère les infos
+  const me = meError ? undefined : meData?.item;
 
-  //Proctection pour afficher la page de profile quand l'utilisateur est connecté
-  const { data, loading, error } = useQuery(queryMySelf);
+  //Refacto: 
+  //Logique de protection des pages délocalisée dans _app.tsx
+
+  /* //Proctection pour afficher la page de profile quand l'utilisateur est connecté
+  
   const router = useRouter();
 
   if(loading) {
@@ -34,5 +42,13 @@ export default function Profile(): React.ReactNode {
         </main>
       </Layout>
     );
-}
+} */
+return (
+  <Layout title="Mon profile">
+    <main className="main-content">
+      <p>Page de profile</p>
+      <p>Mon adresse est : {me?.email}</p>
+    </main>
+  </Layout>
+);
 }

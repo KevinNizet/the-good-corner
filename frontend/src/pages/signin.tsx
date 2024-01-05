@@ -1,5 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { mutationSignin } from "@/graphql/mutationSignin";
+import { queryMySelf } from "@/graphql/queryMySelf";
 
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -11,7 +12,10 @@ export default function Signup(): React.ReactNode {
   const [failed, setFailed] =useState(false);
   const router = useRouter();
 
-  const [doSignin, { error }] = useMutation(mutationSignin);
+  const [doSignin, { error }] = useMutation(mutationSignin, {
+    //refetch de la query essentiel pour remettre à jour le composant parent Auth (dans _app.tsx)
+    refetchQueries: [queryMySelf]
+  });
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

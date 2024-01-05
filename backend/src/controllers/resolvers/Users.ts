@@ -33,79 +33,81 @@ export class UsersResolver {
     return context.user as User;
   }
 
+  @Mutation(() => Boolean)
+  async signout(@Ctx() context: ContextType): Promise<boolean> {
+
+    //set le cookie à 0, donc périmé = déconnexion
+    const cookies = new Cookies(context.req, context.res);
+    cookies.set("token", "", {
+      httpOnly: true,
+      secure: false,
+      maxAge: 0,
+    });
+    return true;
+  }
 
   @Mutation(() => User)
   async signup(
     @Arg("data", () => UserCreateInput) data: UserCreateInput
   ): Promise<User> {
-
     const errors = await validate(data);
     if (errors.length !== 0) {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
-    } 
-      
-    //error custom si l'utilisateur existe déjà. 
+    }
+
+    //error custom si l'utilisateur existe déjà.
     //vient compléter la contrainte d'unicité spécifiée dans l'entité
-    const existingUser = await User.findOneBy({email: data.email});
-      if(existingUser) {
-        throw new Error(`User already exists`);
+    const existingUser = await User.findOneBy({ email: data.email });
+    if (existingUser) {
+      throw new Error(`User already exists`);
     }
 
     const newUser = new User();
     const hashedPassword = await argon2.hash(data.password);
     Object.assign(newUser, {
-        email: data.email,
-        hashedPassword
+      email: data.email,
+      hashedPassword,
     });
 
-      await newUser.save();
-      return newUser;
-    
+    await newUser.save();
+    return newUser;
   }
 
-  @Mutation(() => User, { nullable: true})
+  @Mutation(() => User, { nullable: true })
   async signin(
-    @Ctx() context: ContextType, 
+    @Ctx() context: ContextType,
     @Arg("email") email: string,
     @Arg("password") password: string
   ): Promise<User | null> {
+    const existingUser = await User.findOneBy({ email });
+    if (existingUser) {
+      if (await argon2.verify(existingUser.hashedPassword, password)) {
+        const token = jwt.sign(
+          {
+            //date d'expiration du token
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 2,
+            userId: existingUser.id,
+          },
+          //clé secrete du server
+          process.env.JWT_SECRET || "supersecret"
+        );
 
+        //modifier le header de réponse pour avoir set-cookie
+        //et stocker le token côté client dans les cookies
 
-    const existingUser = await User.findOneBy({email});
-      if(existingUser) {
-        if (await argon2.verify(existingUser.hashedPassword, password)) {
+        const cookies = new Cookies(context.req, context.res);
+        cookies.set("token", token, {
+          httpOnly: true,
+          secure: false,
+          maxAge: 1000 * 60 * 60 * 72,
+        });
 
-          const token = jwt.sign(
-            {
-              //date d'expiration du token
-              exp: Math.floor(Date.now() / 1000) + 60 * 60 * 2,
-              userId: existingUser.id, 
-            }, 
-            //clé secrete du server
-            process.env.JWT_SECRET || "supersecret"
-          );
-
-          
-          //modifier le header de réponse pour avoir set-cookie
-          //et stocker le token côté client dans les cookies
-          
-          const cookies = new Cookies(context.req, context.res);
-          cookies.set("token", token, {
-            httpOnly: true,
-            secure: false, 
-            maxAge: 1000 * 60 * 60 * 72,
-          });
-      
-          
-          
-          return existingUser;
-        } else {
-          return null;
-        }
+        return existingUser;
+      } else {
+        return null;
+      }
     } else {
       return null;
     }
-
-}
-
+  }
 }
