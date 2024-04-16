@@ -1,66 +1,61 @@
 import "reflect-metadata";
-import express from "express";
-import cors from "cors";
 import { dataSource } from "./datasource";
-import { AdsController } from "./controllers/Ads";
-import { CategoriesController } from "./controllers/Categories";
-import { TagsController } from "./controllers/Tags";
+import { buildSchema } from "type-graphql";
+import { TagsResolver } from "./controllers/resolvers/Tags";
+import { ApolloServer } from "@apollo/server";
+import {ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import {expressMiddleware} from '@apollo/server/express4';
+import { AdsResolver } from "./controllers/resolvers/Ads";
+import { CategoriesResolver } from "./controllers/resolvers/Categories";
+import { UsersResolver } from "./controllers/resolvers/Users";
+import { ContextType, customAuthChecker } from "./auth";
+import express from "express";
+import http from 'http';
+import cors from 'cors';
 
-/*
-  CLIENT → (API - Express) SERVEUR (ORM - Typeorm) → BDD (SQLite)
-  CLIENT ← (API - Express) SERVEUR (ORM - Typeorm) ← BDD (SQLite)
-*/
 
-const app = express();
-const port = 5001;
+//modification du serveur avec Express
 
-app.use(express.json());
-app.use(cors());
+async function start() {
+  // Initialisation datasource
+  await dataSource.initialize();
+  
+  // Création du schéma à partir des Resolver
+  const schema = await buildSchema({
+    resolvers: [TagsResolver, AdsResolver, CategoriesResolver, UsersResolver],
+    authChecker: customAuthChecker,
+  });
 
-function asyncController(controller: Function) {
-  return async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    try {
-      await controller(req, res, next);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send();
-    }
-  };
+  const app = express();
+  const httpServer = http.createServer(app);
+  const server = new ApolloServer<ContextType>({
+    schema,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  });
+
+  await server.start();
+
+  app.use(
+    '/',
+    cors<cors.CorsRequest>({
+      origin: "http://localhost:3000",
+      credentials: true,
+    }),
+    express.json({ limit: '50mb' }),
+    expressMiddleware(server, {
+      // Création du contexte
+      context: async (args) => {
+        return {
+          req: args.req,
+          res: args.res,
+        }
+      }
+    }),
+  );
+
+  await new Promise<void>((resolve) => httpServer.listen({ port: 5001 }, resolve));
+
+  console.log("🚀 Server started at http://localhost:5001/");
 }
 
-const adsController = new AdsController();
-app.get("/ads", asyncController(adsController.getAll));
-app.get("/ads/:id", asyncController(adsController.getOne));
-app.post("/ads", asyncController(adsController.createOne));
-app.delete("/ads/:id", asyncController(adsController.deleteOne));
-app.patch("/ads/:id", asyncController(adsController.patchOne));
-app.put("/ads/:id", asyncController(adsController.updateOne));
-
-const categoriesController = new CategoriesController();
-app.get("/categories", asyncController(categoriesController.getAll));
-app.get("/categories/:id", asyncController(categoriesController.getOne));
-app.post("/categories", asyncController(categoriesController.createOne));
-app.delete("/categories/:id", asyncController(categoriesController.deleteOne));
-app.patch("/categories/:id", asyncController(categoriesController.patchOne));
-app.put("/categories/:id", asyncController(categoriesController.updateOne));
-
-const tagsController = new TagsController();
-app.get("/tags", asyncController(tagsController.getAll));
-app.get("/tags/:id", asyncController(tagsController.getOne));
-app.post("/tags", asyncController(tagsController.createOne));
-app.delete("/tags/:id", asyncController(tagsController.deleteOne));
-app.patch("/tags/:id", asyncController(tagsController.patchOne));
-app.put("/tags/:id", asyncController(tagsController.updateOne));
-
-app.all("*", (req, res) => {
-  res.status(404).json({ message: "Not found" });
-});
-
-app.listen(port, async () => {
-  await dataSource.initialize();
-  console.log("Server ready 🚀!");
-});
+start();

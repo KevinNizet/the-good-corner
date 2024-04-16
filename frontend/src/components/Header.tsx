@@ -1,21 +1,46 @@
 import Link from "next/link";
 import React from "react";
 import { Category, CategoryProps } from "./Category";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useApolloClient ,useMutation, useQuery } from "@apollo/client";
+import { queryAllCategories } from "@/graphql/queryAllCategories";
+import { useRouter } from "next/router";
+import { UserType } from "@/types";
+import { queryMySelf } from "@/graphql/queryMySelf";
+import { mutationSignout } from "@/graphql/mutationSignout";
 
 
 export function Header(): React.ReactNode {
-  const  [categories, setCategories] = useState([] as CategoryProps[]);
 
-  //requête au serveur back pour récupérer les Catég
-  useEffect(() => {
-    axios.get("http://localhost:5001/categories").then((result) => {
-    setCategories(result.data);
-    }).catch((err) => {
-      console.error(err);
-    })
-  }, []);
+  //todo
+  //Logique pour la recherche via la searchBar
+ /*  const [searchWord, setSearchWord] = useState("");
+  const router = useRouter();
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    router.push(`/?searchWord=${searchWord.trim()}`);
+  } */
+
+  const { data, error, loading } = useQuery<{ items: CategoryProps[] }>(
+    queryAllCategories
+  );
+  const categories = data ? data.items : [];
+
+  //info de l'utilisateur connectée
+  const { data: meData } = useQuery<{ item: UserType | null }>(queryMySelf);
+  const me = meData?.item;
+
+  const [doSignout] = useMutation(mutationSignout, {
+    refetchQueries: [queryMySelf],
+  }); 
+
+  const apolloClient = useApolloClient();
+
+  //boutton de déconnexion
+  async function logout() {
+    apolloClient.clearStore();
+    doSignout();
+  }
 
   return (
     <header className="header">
@@ -26,8 +51,15 @@ export function Header(): React.ReactNode {
             <span className="desktop-long-label">THE GOOD CORNER</span>
           </Link>
         </h1>
-        <form className="text-field-with-button">
-          <input className="text-field main-search-field" type="search" />
+        <form className="text-field-with-button"/*  onSubmit={onSubmit} */>
+        <input
+            className="text-field main-search-field"
+            type="search"
+            
+            //todo
+  /*           value={searchWord}
+            onChange={(e) => setSearchWord(e.target.value)} */
+          />
           <button className="button button-primary">
             <svg
               aria-hidden="true"
@@ -42,22 +74,29 @@ export function Header(): React.ReactNode {
             </svg>
           </button>
         </form>
+        {me && <button onClick={logout} className="button link-button">
+          <span className="mobile-short-label">Déconnexion</span>
+          <span className="desktop-long-label">Se déconnecter</span>
+        </button>}
         <Link href="/ads/new" className="button link-button">
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>
       </div>
+
+      {/* gestion des catégories */}
       <nav className="categories-navigation">
-        {categories.map((category, index) => (
+      {loading === true && <p>Chargement</p>}
+        {categories?.map((category, index) => (
           <React.Fragment key={category.id}>
             <Category
               name={category.name}
               id={category.id}
-            />{" "}
+            />
             {index < categories.length - 1 && "•"}
           </React.Fragment>
         ))}
-      </nav>
+      </nav>      
     </header>
   );
 }

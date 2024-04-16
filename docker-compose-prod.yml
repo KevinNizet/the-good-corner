@@ -1,0 +1,30 @@
+services:
+#backend
+  backend:
+    build: ./backend
+    ports:
+      - 5001:5001
+    volumes:
+      - ./backend/src:/app/src
+    env_file: ./backend/.env
+  #database
+  db:
+    image: postgres
+    ports:
+      - 5432:5432 
+    volumes:
+      - /var/lib/postgresql/data
+    env_file: .env
+  #Adminer pour PostGreSQL : gestion de la bdd
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  #frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/app/src
